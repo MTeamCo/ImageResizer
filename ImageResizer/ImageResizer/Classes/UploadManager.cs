@@ -37,7 +37,7 @@ namespace Achar_SaleCenter.Classes
             var ratioY = (double)maxHeight / image.Height;
             var ratio = Math.Max(ratioX, ratioY);
 
-            var newWidth = Math.Min((int)(image.Width * ratio), image.Width) ;
+            var newWidth = Math.Min((int)(image.Width * ratio), image.Width);
             var newHeight = Math.Min((int)(image.Height * ratio), image.Height);
 
             var newImage = new Bitmap(newWidth, newHeight);
@@ -64,13 +64,14 @@ namespace Achar_SaleCenter.Classes
             return null;
         }
 
-        public static byte[] GetImagesByte(Image newImage, long quality)
+        public static byte[] GetImagesByte(Image newImage, long quality,string extension)
         {
-            byte[] arr;
-            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+            byte[] arr; 
+            var ext= GetImageFormat(extension);
+            ImageCodecInfo jpgEncoder = GetEncoder(ext);
             Encoder myEncoder = Encoder.Quality;
             EncoderParameters myEncoderParameters = new EncoderParameters(1);
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder,quality);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quality);
             myEncoderParameters.Param[0] = myEncoderParameter;
             using (MemoryStream ms = new MemoryStream())
             {
@@ -79,6 +80,27 @@ namespace Achar_SaleCenter.Classes
             }
 
             return arr;
+        }
+
+        public static ImageFormat GetImageFormat(string extention)
+        {
+            switch (extention.ToLower())
+            {
+                case ".png":
+                    return ImageFormat.Png; 
+                default:
+                    return ImageFormat.Jpeg;
+            }
+        }
+        public static string GetResponseFormat(string extention)
+        {
+            switch (extention.ToLower())
+            {
+                case ".png":
+                    return "image/png"; 
+                default:
+                    return "image/jpg";
+            }
         }
     }
 }

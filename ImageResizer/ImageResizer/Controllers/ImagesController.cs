@@ -20,15 +20,16 @@ namespace ImageResizer.Controllers
             string contentType = "";
             byte[] arr;
             string path = FolderRoute + "\\" + folderName + "\\" + imageName;
+            var extension = Path.GetExtension(imageName);
             //var path =Server.MapPath(imageSend.ImagePath + imageSend.FileName);
 
             Image img = Image.FromFile(path);
             var newImage = UploadManager.ScaleImage(img, width, height);
 
-            arr = UploadManager.GetImagesByte(newImage,quality);
+            arr = UploadManager.GetImagesByte(newImage,quality,extension);
 
 
-            contentType += "image/jpg";
+            contentType +=UploadManager.GetResponseFormat(extension);
             Response.ContentType = contentType;
             Response.OutputStream.Write(arr, 0, arr.Length);
             Response.Flush();
